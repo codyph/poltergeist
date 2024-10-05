@@ -6,6 +6,18 @@ export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams
   const num = searchParams.get('num')
 
+  const potentialQuery = `
+  SELECT ra, dec, parallax
+    FROM gaiadr3.gaia_source
+    WHERE 1=CONTAINS(
+      POINT('ICRS', gaiadr3.gaia_source.ra, gaiadr3.gaia_source.dec),
+      CIRCLE('ICRS', 299.2685, 43.8542, 0.5)
+    )
+	AND parallax > 0
+	AND ABS(1000/parallax) < 2000
+	AND ABS(1000/parallax) > 1000
+  `
+
   const url =
     baseUrl +
     new URLSearchParams({
