@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Overpass_Mono } from "next/font/google";
-import { SiteFooter } from "./components/footer";
+import { SiteFooter } from "./components/Footer";
 
 const overpass_mono = Overpass_Mono({
   subsets: ["latin"],
@@ -21,7 +21,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`antialiased overflow-x-hidden`}
+      className={`antialiased overflow-x-hidden select-none`}
       suppressHydrationWarning
     >
       <body className={`${overpass_mono.className} h-screen overflow-x-hidden`}>
