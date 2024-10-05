@@ -15,7 +15,7 @@ export function SiteFooter() {
           </div>
         </div>
         <div className="flex flex-col items-end text-foreground whitespace-nowrap">
-          <Link href="/about">About</Link>
+          <Link href="/">About</Link>
         </div>
       </div>
     </footer>
