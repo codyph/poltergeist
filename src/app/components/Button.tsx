@@ -11,7 +11,7 @@ const Button = ({ onClick, children }: ButtonProps) => {
   return (
     <div
       onClick={onClick}
-      className="border-2 rounded-xl border-white bg-transparent hover:bg-black w-48 h-full text-white text-xl font-bold py-5 px-4 text-center align-middle"
+      className="border-2 rounded-xl border-white bg-transparent hover:bg-black w-48 h-full text-white text-lg font-bold py-4 px-4 text-center align-middle"
     >
       {children}
     </div>
