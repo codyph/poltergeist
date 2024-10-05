@@ -3,12 +3,16 @@
 import React from "react";
 
 interface ButtonProps {
+  onClick: () => void;
   children: React.ReactNode;
 }
 
-const Button: React.FC<ButtonProps> = ({ children }) => {
+const Button = ({ onClick, children }: ButtonProps) => {
   return (
-    <div className="bg-blue-500 hover:bg-blue-700 w-48 h-16 text-white font-bold py-2 px-4 rounded text-center align-middle">
+    <div
+      onClick={onClick}
+      className="border-2 rounded-xl border-white bg-transparent hover:bg-black w-48 h-full text-white text-xl font-bold py-5 px-4 text-center align-middle"
+    >
       {children}
     </div>
   );
