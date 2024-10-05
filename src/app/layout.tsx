@@ -25,14 +25,10 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className={`${overpass_mono.className} h-screen overflow-x-hidden`}>
-        <div className="flex min-h-[calc(100dvh)] md:min-h-[calc(100dvh)] flex-col">
-          <main className="mx-auto mt-6 flex w-full items-center justify-center pb-3 md:mt-10">
-            <div className="container mx-[8%] w-full px-0 lg:px-[2rem]">
-              {children}
-            </div>
-          </main>
-          <SiteFooter />
-        </div>
+        <main className="flex flex-col items-center justify-center w-full px-0">
+          {children}
+        </main>
+        <SiteFooter />
       </body>
     </html>
   );
