@@ -1,7 +1,7 @@
 import { type NextRequest } from "next/server";
 
 export async function GET(request: NextRequest) {
-  const baseUrl = `https://gea.esac.esa.int/tap-server/tap/sync?`; //`https://gea.esac.esa.int/tap-server/tap/sync?REQUEST=doQuery&LANG=ADQL&FORMAT=json&QUERY=${encodedQuery}`;
+  const baseUrl = `https://gea.esac.esa.int/tap-server/tap/sync?`;
 
   const searchParams = request.nextUrl.searchParams
   const num = searchParams.get('num')
