@@ -3,7 +3,7 @@
 import { useState } from "react";
 import StartOverlay from "./components/StartOverlay";
 import { motion, AnimatePresence } from "framer-motion";
-import ViewPlaceholder from "./components/ViewPlaceholder";
+import SkyViewer from "./components/SkyViewer";
 
 export default function Home() {
   const [displayStartOverlay, setDisplayStartOverlay] = useState<boolean>(true);
@@ -35,7 +35,7 @@ export default function Home() {
           </motion.div>
         ) : null}
       </AnimatePresence>
-      <ViewPlaceholder/>
+      <SkyViewer/>
     </div>
   );
 }
