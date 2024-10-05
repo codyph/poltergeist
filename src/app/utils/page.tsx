@@ -2,18 +2,25 @@
 
 import useSWR from "swr";
 
+export type GaiaDataRequest = {
+  num: string;
+};
+
 export default function GaiaDataFetcher() {
-  
-  const fetcher = (url: string, num: number) =>
-    fetch(`${url}?num=${num}`)
+  const fetcher = async (url: string, args: GaiaDataRequest) => {
+    const params = new URLSearchParams(args);
+    return fetch(`${url}?${params}`)
       .then((r) => r.json())
       .then((j) => j.data.data);
+  };
 
-  const numStars = 5;
+  const requestArgs = {
+    num: "5"
+  }
 
   const { data, error, isLoading } = useSWR(
-    ["/fetch-stars", numStars],
-    ([url, num]) => fetcher(url, num)
+    ["/fetch-stars", requestArgs],
+    ([url, request]) => fetcher(url, request)
   );
 
   return (
@@ -21,7 +28,7 @@ export default function GaiaDataFetcher() {
       {error ? (
         `Error: ${error}`
       ) : isLoading ? (
-        `Fetching ${numStars} stars...`
+        `Fetching ${requestArgs.num} stars...`
       ) : (
         <>
           <h1>Gaia DR3 Data</h1>
