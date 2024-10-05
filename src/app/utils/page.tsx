@@ -1,39 +1,40 @@
 "use client";
 
-import { useState } from "react";
 import useSWR from "swr";
-import { getStars } from "../api/gaia";
 
 export default function GaiaDataFetcher() {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  
+  const fetcher = (url: string, num: number) =>
+    fetch(`${url}?num=${num}`)
+      .then((r) => r.json())
+      .then((j) => j.data.data);
 
-  const id = 0;
+  const numStars = 5;
 
-  const {
-    data: starsData,
-    error: starsError,
-    isLoading: starsIsLoading,
-  } = useSWR(["Get stars", id], ([key, id]) => getStars(id));
-
-  console.log(starsData, starsError, starsIsLoading);
+  const { data, error, isLoading } = useSWR(
+    ["/fetch-stars", numStars],
+    ([url, num]) => fetcher(url, num)
+  );
 
   return (
     <div>
-      {starsError
-        ? `Error: ${starsData}`
-        : starsIsLoading
-        ? "Loading..."
-        : "Success!"}
-      {/* <h1>Gaia DR3 Data</h1>
-      <ul>
-        {data && data.map((star, index) => (
-          <li key={index}>
-            Source ID: {star[0]}, RA: {star[1]}, Dec: {star[2]}
-          </li>
-        ))}
-      </ul> */}
+      {error ? (
+        `Error: ${error}`
+      ) : isLoading ? (
+        `Fetching ${numStars} stars...`
+      ) : (
+        <>
+          <h1>Gaia DR3 Data</h1>
+          <ul>
+            {data &&
+              data.map((star: number[], index: number) => (
+                <li key={index}>
+                  Source ID: {star[0]}, RA: {star[1]}, Dec: {star[2]}
+                </li>
+              ))}
+          </ul>
+        </>
+      )}
     </div>
   );
 }
