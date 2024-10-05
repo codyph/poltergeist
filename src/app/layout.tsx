@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Overpass_Mono } from "next/font/google";
 import { SiteFooter } from "./components/footer";
 
-export const overpass_mono = Overpass_Mono({
+const overpass_mono = Overpass_Mono({
   subsets: ["latin"],
   display: "swap",
 });
