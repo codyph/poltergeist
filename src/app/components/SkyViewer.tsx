@@ -128,7 +128,7 @@ export default function SkyViewer() {
 
       if (intersects.length > 0) {
         const { index, point } = intersects[0];
-        //@ts-expect-error
+        //@ts-expect-error shut the fu ts
         const star = starsData[index];
         const screenPos = toScreenPosition(
           new THREE.Vector3(point.x, point.y, point.z),
@@ -161,7 +161,7 @@ export default function SkyViewer() {
 
         if (intersects.length > 0) {
           const { index } = intersects[0];
-          //@ts-expect-error
+          //@ts-expect-error shut the fu ts
           const star = starsData[index];
 
           setHoveredStar(star);
