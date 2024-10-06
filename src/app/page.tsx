@@ -167,7 +167,7 @@ export default function Home() {
           </motion.div>
         ) : null}
       </AnimatePresence>
-      <SkyViewer />
+      <SkyViewer planet={planet} />
     </div>
   );
 }
