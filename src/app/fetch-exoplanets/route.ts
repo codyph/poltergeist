@@ -62,9 +62,9 @@ export async function GET(request: NextRequest) {
 
   const maxNum = data.length
 
-  var hasMore = true
+  let hasMore = true
 
-  var end = parseInt(start || "0") + parseInt(num || "20")
+  let end = parseInt(start || "0") + parseInt(num || "20")
 
   if (end > maxNum) {
     end = maxNum
