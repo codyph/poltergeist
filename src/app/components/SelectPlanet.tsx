@@ -72,9 +72,9 @@ export default function SelectPlanet({
       setResultList(data?.data || []);
     }
     if (data?.hasMore) {
-      setHasMore(true)
+      setHasMore(true);
     } else {
-      setHasMore(false)
+      setHasMore(false);
     }
   }, [data]);
 
@@ -136,11 +136,17 @@ export default function SelectPlanet({
         </div>
         <div className="flex items-center justify-between mt-4 w-full text-sm">
           <Button onClick={() => setDisplay(false)}>Cancel</Button>
-          <Button onClick={() => {
-            selectedPlanet && setPlanet(selectedPlanet)
-            setDisplay(false)
-            return
-            }}>Go</Button>
+          <Button
+            onClick={() => {
+              if (selectedPlanet) {
+                setPlanet(selectedPlanet);
+              }
+              setDisplay(false);
+              return;
+            }}
+          >
+            Go
+          </Button>
         </div>
       </div>
     </div>
