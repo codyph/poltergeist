@@ -64,6 +64,5 @@ export async function GET(request: NextRequest) {
 
   const res = await fetch(url);
   const data = await res.json();
-  // console.log(Response.json({data}).json().then(r => console.log(r.data)))
   return Response.json({ data });
 }
