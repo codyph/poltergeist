@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@types/three": "^0.169.0",
+    "clsx": "^2.1.1",
     "framer-motion": "^11.11.1",
     "next": "14.2.14",
     "react": "^18",
