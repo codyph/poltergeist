@@ -139,6 +139,7 @@ export default function SelectPlanet({
           <Button onClick={() => {
             selectedPlanet && setPlanet(selectedPlanet)
             setDisplay(false)
+            return
             }}>Go</Button>
         </div>
       </div>
