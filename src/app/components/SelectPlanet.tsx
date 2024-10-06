@@ -80,7 +80,7 @@ export default function SelectPlanet({
   }, [data]);
 
   return (
-    <div className="w-screen h-screen bg-black/80 text-center flex flex-col items-center justify-center px-8 overflow-hidden">
+    <div className="w-screen h-screen bg-black/95 text-center flex flex-col items-center justify-center px-8 overflow-hidden">
       <div className="flex flex-col items-start w-full max-w-[500px] h-full max-h-[80vh] justify-between">
         <div className="flex flex-col items-start w-full h-full overflow-hidden">
           <div className="flex flex-col items-start mb-4 sm:mb-6 w-full">

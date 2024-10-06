@@ -59,7 +59,7 @@ const createGround = (
 
   let randomTexture =
     planetTextures[Math.floor(Math.random() * planetTextures.length)];
-  let randomBumpMap = bumpMaps[Math.floor(Math.random() * bumpMaps.length)];
+  const randomBumpMap = bumpMaps[Math.floor(Math.random() * bumpMaps.length)];
   let randomAngle = Math.random() * 2;
   if (planetName == "Earth") {
     randomTexture = "/textures/planets/earth.jpg";
