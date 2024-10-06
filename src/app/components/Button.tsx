@@ -26,7 +26,7 @@ const Button = ({ active, onClick, children, hoverChildren }: ButtonProps) => {
       onMouseOver={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       className={clsx(
-        "border-2 rounded-xl bg-transparent hover:bg-black h-full font-bold py-4 px-4 text-center align-middle",
+        "cursor-pointer border-2 rounded-xl bg-transparent hover:bg-black h-full font-bold py-4 px-4 text-center align-middle",
         active ? "border-orange-600 text-orange-600" : "border-white text-white"
       )}
       animate={hovered || !hoverChildren ? "open" : "closed"}
