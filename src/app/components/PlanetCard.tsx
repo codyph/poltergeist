@@ -35,7 +35,7 @@ export default function PlanetCard({
           repeat: Infinity,
         }}
         className={clsx(
-          "w-full flex items-center gap-8 justify-between border-2 rounded-lg py-2 px-4",
+          "w-full flex items-center gap-8 justify-between border-2 rounded-lg py-2 px-4 bg-black/30",
           clickable && "hover:border-orange-600 cursor-pointer",
           selected
             ? "border-orange-600 text-orange-600"
@@ -80,7 +80,7 @@ export default function PlanetCard({
     return (
       <div
         className={clsx(
-          "w-full flex items-center gap-8 justify-between border-2 rounded-lg py-2 px-4",
+          "w-full flex items-center gap-8 justify-between border-2 rounded-lg py-2 px-4 bg-black/30",
           clickable && "hover:border-orange-600 cursor-pointer",
           selected
             ? "border-orange-600 text-orange-600"
