@@ -1,12 +1,9 @@
 import Button from "./Button";
 import { IoPlanet } from "react-icons/io5";
 import { BsStars } from "react-icons/bs";
-import PlanetCard from "./PlanetCard";
-import { Exoplanet } from "../fetch-exoplanets/route";
 import { IoHelp } from "react-icons/io5";
 
 export default function ButtonOverlay({
-  currentPlanet,
   displaySelectPlanet,
   setDisplaySelectPlanet,
   showConstellations,
@@ -14,7 +11,6 @@ export default function ButtonOverlay({
   showHelp,
   setShowHelp,
 }: {
-  currentPlanet: Exoplanet;
   displaySelectPlanet: boolean;
   setDisplaySelectPlanet: (d: boolean) => void;
   showConstellations: boolean;
@@ -23,7 +19,7 @@ export default function ButtonOverlay({
   setShowHelp: (d: boolean) => void;
 }) {
   return (
-    <div className="bg-transparent h-[100dvh] pl-8 pt-8 pb-16 text-center flex flex-col items-start justify-between">
+    <div className="bg-transparent pl-8 pt-8 pb-16 text-center flex flex-col items-start justify-between">
       <div className="flex flex-col gap-4">
         <div className="text-sm flex">
           <Button
@@ -65,9 +61,6 @@ export default function ButtonOverlay({
             <IoHelp size={20} />
           </Button>
         </div>
-      </div>
-      <div className="flex">
-        <PlanetCard planet={currentPlanet} />
       </div>
     </div>
   );

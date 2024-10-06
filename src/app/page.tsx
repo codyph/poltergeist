@@ -9,6 +9,7 @@ import ButtonOverlay from "./components/ButtonOverlay";
 import { Exoplanet } from "./fetch-exoplanets/route";
 import useSWR from "swr";
 import Help from "./components/Help";
+import PlanetCard from "./components/PlanetCard";
 
 export type GaiaDataRequest = {
   ra: string;
@@ -106,7 +107,6 @@ export default function Home() {
             className="absolute z-10 self-start"
           >
             <ButtonOverlay
-              currentPlanet={planet}
               displaySelectPlanet={displaySelectPlanet}
               setDisplaySelectPlanet={setDisplaySelectPlanet}
               showConstellations={showConstellations}
@@ -114,6 +114,30 @@ export default function Home() {
               showHelp={displayHelp}
               setShowHelp={setDisplayHelp}
             />
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+      <AnimatePresence>
+        {!displayStartOverlay ? (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{
+              opacity: 1,
+              transition: {
+                duration: 0.5,
+              },
+            }}
+            exit={{
+              opacity: 0,
+              transition: {
+                duration: 0.5,
+              },
+            }}
+            className="absolute bottom-0 z-10 self-start"
+          >
+            <div className="bg-transparent pl-8 pb-16 text-center flex flex-col items-start justify-end">
+              <PlanetCard planet={planet} />
+            </div>
           </motion.div>
         ) : null}
       </AnimatePresence>
@@ -162,14 +186,11 @@ export default function Home() {
             }}
             className="absolute z-10"
           >
-            <Help
-              display={displayHelp}
-              setDisplay={setDisplayHelp}
-            />
+            <Help display={displayHelp} setDisplay={setDisplayHelp} />
           </motion.div>
         ) : null}
       </AnimatePresence>
-      <SkyViewer planet={planet} showConstellations={showConstellations}/>
+      <SkyViewer planet={planet} showConstellations={showConstellations} />
     </div>
   );
 }
