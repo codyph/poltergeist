@@ -10,26 +10,29 @@ export type Stars = {
   s_age: number;
   s_teff: number;
   s_logg: number;
-}
+};
 
 export async function GET(request: NextRequest) {
   const baseUrl = `https://gea.esac.esa.int/tap-server/tap/sync?`;
 
   const searchParams = request.nextUrl.searchParams;
-  const exoplanet_ra = searchParams.get('exoplanet_ra');
-  const exoplanet_dec = searchParams.get('exoplanet_dec');
-  const exoplanet_dist = searchParams.get('exoplanet_dist');
+  const exoplanet_ra = searchParams.get("exoplanet_ra");
+  const exoplanet_dec = searchParams.get("exoplanet_dec");
+  const exoplanet_dist = searchParams.get("exoplanet_dist");
 
   // Getting cone search angle
-  const searchBoundary = 30; // parsecs
+  const searchBoundary = 10; // parsecs
 
   let query = ``;
   if (exoplanet_dist && parseFloat(exoplanet_dist) > 0.5) {
     const upperBoundary = parseFloat(exoplanet_dist) + searchBoundary;
     let lowerBoundary = parseFloat(exoplanet_dist) - searchBoundary;
-    lowerBoundary < 0 && (lowerBoundary = 0);
+    if (lowerBoundary < 0) {
+      lowerBoundary = 0
+    }
 
-    const searchAngle = Math.atan(searchBoundary/parseFloat(exoplanet_dist)) * 180/Math.PI
+    const searchAngle =
+      (Math.atan(searchBoundary / parseFloat(exoplanet_dist)) * 180) / Math.PI;
     query = `
     SELECT gs.ra, gs.dec, ap.distance_gspphot, ap.spectraltype_esphs, ap.radius_flame, ap.lum_flame, ap.age_flame, ap.teff_gspphot, ap.logg_gspphot
     FROM gaiadr3.gaia_source AS gs
@@ -41,7 +44,7 @@ export async function GET(request: NextRequest) {
     )
     AND ap.distance_gspphot <= ${upperBoundary}
     AND ap.distance_gspphot >= ${lowerBoundary}
-    `
+    `;
   } else {
     query = `
     SELECT gs.ra, gs.dec, ap.distance_gspphot, ap.spectraltype_esphs, ap.radius_flame, ap.lum_flame, ap.age_flame, ap.teff_gspphot, ap.logg_gspphot
@@ -49,8 +52,8 @@ export async function GET(request: NextRequest) {
     JOIN gaiadr3.astrophysical_parameters AS ap
     ON gs.source_id = ap.source_id
     WHERE ap.distance_gspphot <= ${searchBoundary}
-    `
-  };
+    `;
+  }
 
   const url =
     baseUrl +
@@ -58,11 +61,22 @@ export async function GET(request: NextRequest) {
       REQUEST: "doQuery",
       LANG: "ADQL",
       FORMAT: "json",
-      // PHASE: "RUN",
       QUERY: `${query}`,
     });
 
-  const res = await fetch(url);
-  const data = await res.json();
-  return Response.json({ data });
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+
+    // Need proper response object
+    return new Response(JSON.stringify({ data }), {
+      status: 200,
+      headers: { "Content-Type": "application/json" },
+    });
+  } catch (error) {
+    return new Response(JSON.stringify({ error: "Failed to fetch data" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
 }

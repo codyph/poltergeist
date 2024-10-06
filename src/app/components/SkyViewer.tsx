@@ -36,18 +36,31 @@ const createLights = (scene: THREE.Scene) => {
   scene.add(directionalLight);
 };
 
-const createGround = (scene: THREE.Scene, textureLoader: THREE.TextureLoader) => {
-  const groundTexture = textureLoader.load("/textures/earth.jpg");
-  groundTexture.rotation = Math.PI / 30;
+const createGround = (scene: THREE.Scene, textureLoader: THREE.TextureLoader, renderer: THREE.WebGLRenderer) => {
+  const groundTexture = textureLoader.load("/textures/earth42.jpg", (texture) => {
+    const maxAnisotropy = renderer.capabilities.getMaxAnisotropy();
+    texture.anisotropy = maxAnisotropy;
 
-  const groundGeometry = new THREE.SphereGeometry(500, 200, 200);
+    texture.magFilter = THREE.LinearFilter;
+    texture.minFilter = THREE.LinearMipMapLinearFilter;
+
+    texture.wrapT = THREE.ClampToEdgeWrapping;
+    texture.wrapS = THREE.ClampToEdgeWrapping;
+  });
+  groundTexture.rotation = Math.PI / 40;
+
+  const bumpMap = textureLoader.load("/textures/bump.jpg");
+
+  const groundGeometry = new THREE.SphereGeometry(10, 400, 400);
   const groundMaterial = new THREE.MeshStandardMaterial({
     map: groundTexture,
+    bumpMap: bumpMap,
+    bumpScale: 10,
     side: THREE.DoubleSide,
   });
   const ground = new THREE.Mesh(groundGeometry, groundMaterial);
   ground.rotation.x = -Math.PI / 2;
-  ground.position.y = -500;
+  ground.position.y = -8.25;
   scene.add(ground);
 
   return { groundGeometry, groundMaterial };
@@ -102,7 +115,8 @@ export default function SkyViewer() {
     const textureLoader = new THREE.TextureLoader();
     const { groundGeometry, groundMaterial } = createGround(
       scene,
-      textureLoader
+      textureLoader,
+      renderer
     );
 
     const { starVertices, starsData } = generateStarsData(10000);
