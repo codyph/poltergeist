@@ -41,6 +41,8 @@ export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const query = searchParams.get("query");
   const filter = searchParams.get("filter");
+  const start = searchParams.get("start");
+  const num = searchParams.get("num");
 
   let data = exoplanets;
 
@@ -54,9 +56,22 @@ export async function GET(request: NextRequest) {
   }
 
   if (filter) {
-    // Implement your filter logic here
+    // Implement filter logic here
     // Example: results = results.filter(item => item.category === filter);
   }
 
-  return Response.json({ data });
+  const maxNum = data.length
+
+  var hasMore = true
+
+  var end = parseInt(start || "0") + parseInt(num || "20")
+
+  if (end > maxNum) {
+    end = maxNum
+    hasMore = false
+  }
+
+  data = data.slice(parseInt(start || "0"), end);
+
+  return Response.json({ data, hasMore });
 }
