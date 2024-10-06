@@ -19,7 +19,7 @@ export default function Help({
           <div className="flex flex-col gap-8">
           <div className="flex items-center w-full gap-4 sm:gap-6">
             <AiOutlineDrag size={48}/>
-            <div className="text-left">Click and drag to explore the planet's sky.</div>
+            <div className="text-left">Click and drag to explore the planet&apos;s sky.</div>
           </div>
           <div className="flex items-center w-full gap-4 sm:gap-6">
             <HiCursorClick size={48}/>
@@ -27,7 +27,7 @@ export default function Help({
           </div>
           <div className="flex items-center w-full gap-4 sm:gap-6">
             <IoPlanet size={48}/>
-            <div className="text-left">Search through NASA's catalogue of exoplanets.</div>
+            <div className="text-left">Search through NASA&apos;s catalogue of exoplanets.</div>
           </div>
           <div className="flex items-center w-full gap-4 sm:gap-6">
             <BsStars size={48}/>
