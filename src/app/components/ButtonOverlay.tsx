@@ -5,9 +5,13 @@ import { BsStars } from "react-icons/bs";
 export default function ButtonOverlay({
   displaySelectPlanet,
   setDisplaySelectPlanet,
+  showConstellations,
+  setShowConstellations,
 }: {
   displaySelectPlanet: boolean;
   setDisplaySelectPlanet: (d: boolean) => void;
+  showConstellations: boolean;
+  setShowConstellations: (d: boolean) => void;
 }) {
   return (
     <div className="bg-transparent text-center flex flex-col items-start gap-4 justify-between">
@@ -26,7 +30,8 @@ export default function ButtonOverlay({
       </div>
       <div className="text-sm">
         <Button
-          onClick={() => null}
+          active={showConstellations}
+          onClick={() => setShowConstellations(!showConstellations)}
           hoverChildren={
             <span className="flex whitespace-nowrap">
               <BsStars size={20} />
@@ -34,7 +39,7 @@ export default function ButtonOverlay({
             </span>
           }
         >
-          <BsStars size={20}/>
+          <BsStars size={20} />
         </Button>
       </div>
     </div>

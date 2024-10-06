@@ -12,6 +12,7 @@ export default function Home() {
   const [displayStartOverlay, setDisplayStartOverlay] = useState<boolean>(true);
   const [displaySelectPlanet, setDisplaySelectPlanet] =
     useState<boolean>(false);
+  const [showConstellations, setShowConstellations] = useState<boolean>(false);
   const [planet, setPlanet] = useState<Exoplanet>({
     pl_name: "Earth",
     hostname: "Sol",
@@ -73,6 +74,8 @@ export default function Home() {
             <ButtonOverlay
               displaySelectPlanet={displaySelectPlanet}
               setDisplaySelectPlanet={setDisplaySelectPlanet}
+              showConstellations={showConstellations}
+              setShowConstellations={setShowConstellations}
             />
           </motion.div>
         ) : null}
