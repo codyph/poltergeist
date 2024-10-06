@@ -8,6 +8,7 @@ import PlanetCard from "./PlanetCard";
 import { SearchInput } from "./SearchInput";
 import { ChangeEvent, useEffect, useState } from "react";
 import { useDebounce } from "use-debounce";
+import { FaShuffle } from "react-icons/fa6";
 
 export type ExoplanetDataRequest = {
   query: string;
@@ -79,12 +80,14 @@ export default function SelectPlanet({
   }, [data]);
 
   return (
-    <div className="w-screen h-screen bg-black/70 text-center flex flex-col items-center justify-center px-8 overflow-hidden">
+    <div className="w-screen h-screen bg-black/80 text-center flex flex-col items-center justify-center px-8 overflow-hidden">
       <div className="flex flex-col items-start w-full max-w-[500px] h-full max-h-[80vh] justify-between">
         <div className="flex flex-col items-start w-full h-full overflow-hidden">
-          <div className="flex flex-col items-start mb-4 w-full">
-            <span className="mb-1">Current planet</span>
-            <PlanetCard planet={planet} />
+          <div className="flex flex-col items-start mb-4 sm:mb-6 w-full">
+            <span className="mb-2">Current planet</span>
+            <div className="w-full px-4">
+              <PlanetCard planet={planet} />
+            </div>
           </div>
           <div className="flex flex-col items-start mb-4 w-full h-full overflow-hidden">
             <span className="mb-1">Search planets</span>
@@ -97,11 +100,11 @@ export default function SelectPlanet({
               ) : isLoading && resultList.length == 0 ? (
                 `Loading...`
               ) : (
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-2 pt-2">
                   {resultList &&
                     resultList.map((planet, index) => (
                       <div
-                        className="pr-2 pb-1"
+                        className="px-4 pt-2"
                         onClick={() => setSelectedPlanet(planet)}
                         key={planet.pl_name}
                       >
@@ -136,17 +139,35 @@ export default function SelectPlanet({
         </div>
         <div className="flex items-center justify-between mt-4 w-full text-sm">
           <Button onClick={() => setDisplay(false)}>Cancel</Button>
-          <Button
-            onClick={() => {
-              if (selectedPlanet) {
-                setPlanet(selectedPlanet);
-              }
-              setDisplay(false);
-              return;
-            }}
-          >
-            Go
-          </Button>
+          <div className="flex items-center gap-4">
+            <Button
+              onClick={() => {
+                setPlanet(
+                  resultList[Math.floor(Math.random() * resultList.length)]
+                );
+                setDisplay(false);
+                return;
+              }}
+            >
+              <span className="flex whitespace-nowrap">
+                Random{"\u00a0"}
+                <FaShuffle size={20} />
+              </span>
+            </Button>
+            {selectedPlanet && !(selectedPlanet.pl_name == planet.pl_name) ? (
+              <Button
+                onClick={() => {
+                  if (selectedPlanet) {
+                    setPlanet(selectedPlanet);
+                  }
+                  setDisplay(false);
+                  return;
+                }}
+              >
+                Go
+              </Button>
+            ) : null}
+          </div>
         </div>
       </div>
     </div>
