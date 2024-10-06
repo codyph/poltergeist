@@ -77,7 +77,7 @@ export default function StarPopover({ star, onClose }: StarPopoverProps) {
       >
         <h3>{star.name}</h3>
         <p><strong>Type:</strong> {star.type}-type</p>
-        <p><strong>Radius:</strong> {star.radius}</p>
+        <p><strong>Radius:</strong> {star.radius} Sols</p>
         <p><strong>Luminosity:</strong> {star.luminosity} Sols</p>
         <p><strong>Distance:</strong> {star.distance} light-years</p>
         <button
