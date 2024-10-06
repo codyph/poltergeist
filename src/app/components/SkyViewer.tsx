@@ -43,14 +43,13 @@ const createGround = (
   textureLoader: THREE.TextureLoader,
   renderer: THREE.WebGLRenderer
 ) => {
-
   const planetTextures = [
     "/textures/planets/mars.jpg",
     "/textures/planets/jupiter.jpg",
     "/textures/planets/mercury.jpg",
     "/textures/planets/neptune.jpg",
     "/textures/planets/venus.jpg",
-  ]
+  ];
 
   const bumpMaps = [
     "/textures/bumpMaps/bump1.jpg",
@@ -58,28 +57,25 @@ const createGround = (
     "/textures/bumpMaps/bump3.jpg",
   ];
 
-  let randomTexture = planetTextures[Math.floor(Math.random() * planetTextures.length)];
+  let randomTexture =
+    planetTextures[Math.floor(Math.random() * planetTextures.length)];
   let randomBumpMap = bumpMaps[Math.floor(Math.random() * bumpMaps.length)];
   let randomAngle = Math.random() * 2;
   if (planetName == "Earth") {
     randomTexture = "/textures/planets/earth.jpg";
-    randomAngle = 1.0/40.0
+    randomAngle = 1.0 / 40.0;
   }
 
+  const groundTexture = textureLoader.load(randomTexture, (texture) => {
+    const maxAnisotropy = renderer.capabilities.getMaxAnisotropy();
+    texture.anisotropy = maxAnisotropy;
 
-  const groundTexture = textureLoader.load(
-    randomTexture,
-    (texture) => {
-      const maxAnisotropy = renderer.capabilities.getMaxAnisotropy();
-      texture.anisotropy = maxAnisotropy;
+    texture.magFilter = THREE.LinearFilter;
+    texture.minFilter = THREE.LinearMipMapLinearFilter;
 
-      texture.magFilter = THREE.LinearFilter;
-      texture.minFilter = THREE.LinearMipMapLinearFilter;
-
-      texture.wrapT = THREE.ClampToEdgeWrapping;
-      texture.wrapS = THREE.ClampToEdgeWrapping;
-    }
-  );
+    texture.wrapT = THREE.ClampToEdgeWrapping;
+    texture.wrapS = THREE.ClampToEdgeWrapping;
+  });
   groundTexture.rotation = Math.PI * randomAngle;
 
   const bumpMap = textureLoader.load(randomBumpMap);
@@ -117,6 +113,34 @@ const createStars = (scene: THREE.Scene, starVertices: Float32Array) => {
   return { starGeometry, starMaterial, stars };
 };
 
+const createConstellationLines = (
+  scene: THREE.Scene,
+  starsData: any[],
+  constellations: number[][]
+): THREE.Line[] => { // Return an array of lines
+  const material = new THREE.LineBasicMaterial({ color: 0xffd700 }); // Gold color for lines
+  const lines: THREE.Line[] = [];
+
+  constellations.forEach((constellation) => {
+    const points = constellation.map((index) => {
+      const star = starsData[index];
+      return new THREE.Vector3(
+        star.position.x,
+        star.position.y,
+        star.position.z
+      );
+    });
+
+    const geometry = new THREE.BufferGeometry().setFromPoints(points);
+    const line = new THREE.Line(geometry, material.clone()); // Clone material for individual lines if needed
+    scene.add(line);
+    lines.push(line);
+  });
+
+  return lines;
+};
+
+
 const createHoverSphere = (scene: THREE.Scene) => {
   const hoverGeometry = new THREE.SphereGeometry(2, 16, 16);
   const hoverMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000 });
@@ -129,19 +153,32 @@ const createHoverSphere = (scene: THREE.Scene) => {
 
 // Main Component
 
-export default function SkyViewer({planet}: {planet: Exoplanet}) {
+export default function SkyViewer({ planet, showConstellations }: { planet: Exoplanet, showConstellations: boolean }) {
   const mountRef = useRef<HTMLDivElement>(null);
+  const constellationLinesRef = useRef<THREE.Line[]>([]); // Ref to store constellation lines
   const [selectedStar, setSelectedStar] = useState(null);
   const [hoveredStar, setHoveredStar] = useState(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const yawRef = useRef(0);
   const pitchRef = useRef(0);
   const isDragging = useRef(false);
+  
+  const sceneRef = useRef<THREE.Scene>();
+  const cameraRef = useRef<THREE.PerspectiveCamera>();
+  const rendererRef = useRef<THREE.WebGLRenderer>();
+  const starsDataRef = useRef<any[]>([]);
+  const starsRef = useRef<THREE.Points>();
 
   useEffect(() => {
+    // Initial Scene Setup
     const scene = createScene();
+    sceneRef.current = scene;
+
     const camera = createCamera();
+    cameraRef.current = camera;
+
     const renderer = createRenderer(mountRef);
+    rendererRef.current = renderer;
 
     createLights(scene);
 
@@ -153,18 +190,33 @@ export default function SkyViewer({planet}: {planet: Exoplanet}) {
       renderer
     );
 
-    const { starVertices, starsData } = generateStarsData(10000);
+    const numStars = 10000;
+    const { starVertices, starsData } = generateStarsData(numStars);
+    starsDataRef.current = starsData;
+
     const { starGeometry, starMaterial, stars } = createStars(
       scene,
       starVertices
     );
+    starsRef.current = stars;
 
-    const { hoverGeometry, hoverMaterial, hoverSphere } =
-      createHoverSphere(scene);
+    // Initialize constellation lines if showConstellations is true
+    if (showConstellations) {
+      const constellations = [
+        // Example: connecting stars by their indices
+        [numStars - 6, numStars - 5, numStars - 4, numStars - 1],
+        [numStars - 3, numStars - 2, numStars - 1],
+      ];
+      const lines = createConstellationLines(scene, starsData, constellations);
+      constellationLinesRef.current = lines;
+    }
+
+    const { hoverGeometry, hoverMaterial, hoverSphere } = createHoverSphere(scene);
 
     const raycaster = new THREE.Raycaster();
     const mouse = new THREE.Vector2();
 
+    // Event Handlers
     const handleClick = (event: MouseEvent) => {
       if (isDragging.current) return;
 
@@ -176,7 +228,7 @@ export default function SkyViewer({planet}: {planet: Exoplanet}) {
 
       if (intersects.length > 0) {
         const { index, point } = intersects[0];
-        //@ts-expect-error shut the fu ts
+        //@ts-expect-error TypeScript issue
         const star = starsData[index];
         const screenPos = toScreenPosition(
           new THREE.Vector3(point.x, point.y, point.z),
@@ -209,7 +261,7 @@ export default function SkyViewer({planet}: {planet: Exoplanet}) {
 
         if (intersects.length > 0) {
           const { index } = intersects[0];
-          //@ts-expect-error shut the fu ts
+          //@ts-expect-error TypeScript issue
           const star = starsData[index];
 
           setHoveredStar(star);
@@ -240,26 +292,33 @@ export default function SkyViewer({planet}: {planet: Exoplanet}) {
     };
 
     const handleResize = () => {
-      camera.aspect = window.innerWidth / window.innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(window.innerWidth, window.innerHeight);
+      if (cameraRef.current && rendererRef.current) {
+        cameraRef.current.aspect = window.innerWidth / window.innerHeight;
+        cameraRef.current.updateProjectionMatrix();
+        rendererRef.current.setSize(window.innerWidth, window.innerHeight);
+      }
     };
 
+    // Add Event Listeners
     renderer.domElement.addEventListener("click", handleClick);
     renderer.domElement.addEventListener("mousemove", handleMouseMove);
     renderer.domElement.addEventListener("mousedown", handleMouseDown);
     renderer.domElement.addEventListener("mouseup", handleMouseUp);
     window.addEventListener("resize", handleResize);
 
+    // Animation Loop
     const animate = () => {
       requestAnimationFrame(animate);
-      camera.rotation.order = "YXZ";
-      camera.rotation.y = yawRef.current;
-      camera.rotation.x = pitchRef.current;
+      if (cameraRef.current) {
+        cameraRef.current.rotation.order = "YXZ";
+        cameraRef.current.rotation.y = yawRef.current;
+        cameraRef.current.rotation.x = pitchRef.current;
+      }
       renderer.render(scene, camera);
     };
     animate();
 
+    // Cleanup on Unmount
     return () => {
       renderer.domElement.removeEventListener("click", handleClick);
       renderer.domElement.removeEventListener("mousemove", handleMouseMove);
@@ -268,15 +327,54 @@ export default function SkyViewer({planet}: {planet: Exoplanet}) {
       window.removeEventListener("resize", handleResize);
       mountRef.current?.removeChild(renderer.domElement);
 
+      // Dispose geometries and materials
       groundGeometry.dispose();
       groundMaterial.dispose();
-      starGeometry.dispose();
-      starMaterial.dispose();
-      hoverGeometry.dispose();
-      hoverMaterial.dispose();
+      if (starsRef.current) {
+        starsRef.current.geometry.dispose();
+        (starsRef.current.material as THREE.PointsMaterial).dispose();
+      }
+      if (hoverGeometry) hoverGeometry.dispose();
+      if (hoverMaterial) hoverMaterial.dispose();
       renderer.dispose();
     };
-  }, [planet]);
+  }, [planet]); // Only run on mount and when planet changes
+
+  // useEffect to handle showConstellations changes
+  useEffect(() => {
+    const scene = sceneRef.current;
+    const starsData = starsDataRef.current;
+    const numStars = starsData.length;
+    if (!scene) return;
+
+    // Function to create constellation lines and store them in the ref
+    const addConstellations = () => {
+      const constellations = [
+        // Example: connecting stars by their indices
+        [numStars - 6, numStars - 5, numStars - 4, numStars - 1],
+        [numStars - 3, numStars - 2, numStars - 1],
+      ];
+      const lines = createConstellationLines(scene, starsData, constellations);
+      constellationLinesRef.current = lines;
+    };
+
+    // Function to remove constellation lines
+    const removeConstellations = () => {
+      constellationLinesRef.current.forEach(line => {
+        scene.remove(line);
+        line.geometry.dispose();
+        (line.material as THREE.LineBasicMaterial).dispose();
+      });
+      constellationLinesRef.current = [];
+    };
+
+    if (showConstellations) {
+      addConstellations();
+    } else {
+      removeConstellations();
+    }
+
+  }, [showConstellations]); // Run when showConstellations changes
 
   const closeDialog = () => setSelectedStar(null);
 
