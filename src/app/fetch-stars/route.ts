@@ -15,15 +15,15 @@ export type Stars = {
 export async function GET(request: NextRequest) {
   const baseUrl = `https://gea.esac.esa.int/tap-server/tap/sync?`;
 
-  const searchParams = request.nextUrl.searchParams
-  const exoplanet_ra = searchParams.get('exoplanet_ra')
-  const exoplanet_dec = searchParams.get('exoplanet_dec')
-  const exoplanet_dist = searchParams.get('exoplanet_dist')
+  const searchParams = request.nextUrl.searchParams;
+  const exoplanet_ra = searchParams.get('exoplanet_ra');
+  const exoplanet_dec = searchParams.get('exoplanet_dec');
+  const exoplanet_dist = searchParams.get('exoplanet_dist');
 
   // Getting cone search angle
-  const searchBoundary = 30 // parsecs
+  const searchBoundary = 30; // parsecs
 
-  let query = ``
+  let query = ``;
   if (exoplanet_dist && parseFloat(exoplanet_dist) > 0.5) {
     const upperBoundary = parseFloat(exoplanet_dist) + searchBoundary;
     let lowerBoundary = parseFloat(exoplanet_dist) - searchBoundary;
@@ -50,7 +50,7 @@ export async function GET(request: NextRequest) {
     ON gs.source_id = ap.source_id
     WHERE ap.distance_gspphot <= ${searchBoundary}
     `
-  }
+  };
 
   const url =
     baseUrl +

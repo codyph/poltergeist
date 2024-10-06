@@ -30,9 +30,9 @@ export type Exoplanet = {
   st_tefferr1?: number;
   st_tefferr2?: number;
   st_tefflim?: number;
-  ra?: number;
-  dec?: number;
-  sy_dist?: number;
+  ra: number;
+  dec: number;
+  sy_dist: number;
   sy_disterr1?: number;
   sy_disterr2?: number;
 };

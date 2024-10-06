@@ -1,12 +1,19 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import StartOverlay from "./components/StartOverlay";
 import { motion, AnimatePresence } from "framer-motion";
 import SkyViewer from "./components/SkyViewer";
 import SelectPlanet from "./components/SelectPlanet";
 import ButtonOverlay from "./components/ButtonOverlay";
 import { Exoplanet } from "./fetch-exoplanets/route";
+import useSWR from "swr";
+
+export type GaiaDataRequest = {
+  ra: string,
+  dec: string,
+  sy_dist: string,
+};
 
 export default function Home() {
   const [displayStartOverlay, setDisplayStartOverlay] = useState<boolean>(true);
@@ -24,7 +31,28 @@ export default function Home() {
     pl_bmasse: 1,
     pl_eqt: 255,
     st_teff: 5780,
+    ra: 0,
+    dec: 0,
+    sy_dist: 0,
   });
+
+  const fetcher = async (url: string, args: GaiaDataRequest) => {
+    const params = new URLSearchParams(args);
+    return fetch(`${url}?${params}`)
+      .then((r) => r.json())
+      .then((j) => j.data.data);
+  };
+
+  const { data, error, isLoading } = useSWR(
+    ["/fetch-stars", {
+      ra: planet.ra.toString(),
+      dec: planet.dec.toString(),
+      sy_dist: planet.sy_dist.toString(),
+    }],
+    ([url, request]) => fetcher(url, request)
+  );
+
+  console.log(data)
 
   return (
     <div className="relative flex flex-col items-center w-screen h-screen">
