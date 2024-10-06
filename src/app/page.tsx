@@ -39,6 +39,8 @@ export default function Home() {
     habitable: true,
   });
 
+  // console.log(showConstellations)
+
   const fetcher = async (url: string, args: GaiaDataRequest) => {
     const params = new URLSearchParams(args);
     return fetch(`${url}?${params}`)
@@ -167,7 +169,7 @@ export default function Home() {
           </motion.div>
         ) : null}
       </AnimatePresence>
-      <SkyViewer planet={planet} />
+      <SkyViewer planet={planet} showConstellations={showConstellations}/>
     </div>
   );
 }
