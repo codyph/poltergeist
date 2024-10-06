@@ -56,8 +56,6 @@ export default function Home() {
     ([url, request]) => fetcher(url, request)
   );
 
-  console.log(data);
-
   return (
     <div className="relative flex flex-col items-center w-screen h-screen">
       <AnimatePresence>
