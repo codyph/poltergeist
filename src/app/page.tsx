@@ -21,7 +21,7 @@ export default function Home() {
   const [displayStartOverlay, setDisplayStartOverlay] = useState<boolean>(true);
   const [displaySelectPlanet, setDisplaySelectPlanet] =
     useState<boolean>(false);
-  const [displayHelp, setDisplayHelp] = useState<boolean>(false);
+  const [displayHelp, setDisplayHelp] = useState<boolean>(true);
   const [showConstellations, setShowConstellations] = useState<boolean>(false);
   const [planet, setPlanet] = useState<Exoplanet>({
     pl_name: "Earth",
@@ -169,7 +169,7 @@ export default function Home() {
         ) : null}
       </AnimatePresence>
       <AnimatePresence>
-        {displayHelp ? (
+        {displayHelp && !displayStartOverlay ? (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{
