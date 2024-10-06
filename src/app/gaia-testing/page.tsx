@@ -43,7 +43,7 @@ export default function GaiaDataFetcher(pl_ra: number, pl_dec: number, pl_dist: 
             {data &&
               data.map((star: number[], index: number) => (
                 <li key={index}>
-                  Source ID: {star[0]}, RA: {star[1]}, Dec: {star[2]}
+                  RA {star[0]}, DEC: {star[1]}, Dist: {star[2]}
                 </li>
               ))}
           </ul>

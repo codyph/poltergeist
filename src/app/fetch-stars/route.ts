@@ -1,10 +1,15 @@
 import { type NextRequest } from "next/server";
 
 export type Stars = {
-  s_id: string;
-  ra: number;
-  dec: number;
-  parallax: number;
+  s_ra: number;
+  s_dec: number;
+  s_dist: number;
+  s_st: string;
+  s_rad: number;
+  s_lum: number;
+  s_age: number;
+  s_teff: number;
+  s_logg: number;
 }
 
 export async function GET(request: NextRequest) {
@@ -26,7 +31,7 @@ export async function GET(request: NextRequest) {
 
     const searchAngle = Math.atan(searchBoundary/parseFloat(exoplanet_dist)) * 180/Math.PI
     query = `
-    SELECT gs.ra, gs.dec, ap.distance_gspphot,  ap.spectraltype_esphs, ap.radius_flame, ap.lum_flame, ap.age_flame, ap.teff_gspphot, ap.logg_gspphot
+    SELECT gs.ra, gs.dec, ap.distance_gspphot, ap.spectraltype_esphs, ap.radius_flame, ap.lum_flame, ap.age_flame, ap.teff_gspphot, ap.logg_gspphot
     FROM gaiadr3.gaia_source AS gs
     JOIN gaiadr3.astrophysical_parameters as ap
     ON gs.source_id = ap.source_id
@@ -39,15 +44,13 @@ export async function GET(request: NextRequest) {
     `
   } else {
     query = `
-    SELECT gs.ra, gs.dec, ap.distance_gspphot,  ap.spectraltype_esphs, ap.radius_flame, ap.lum_flame, ap.age_flame, ap.teff_gspphot, ap.logg_gspphot
+    SELECT gs.ra, gs.dec, ap.distance_gspphot, ap.spectraltype_esphs, ap.radius_flame, ap.lum_flame, ap.age_flame, ap.teff_gspphot, ap.logg_gspphot
     FROM gaiadr3.gaia_source AS gs
     JOIN gaiadr3.astrophysical_parameters AS ap
     ON gs.source_id = ap.source_id
     WHERE ap.distance_gspphot <= ${searchBoundary}
     `
   }
-
-  console.log(query)
 
   const url =
     baseUrl +
@@ -61,6 +64,6 @@ export async function GET(request: NextRequest) {
 
   const res = await fetch(url);
   const data = await res.json();
-
+  // console.log(Response.json({data}).json().then(r => console.log(r.data)))
   return Response.json({ data });
 }
