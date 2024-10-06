@@ -46,17 +46,17 @@ export default function Home() {
       .then((j) => j.data.data);
   };
 
-  const { data, error, isLoading } = useSWR(
-    [
-      "/fetch-stars",
-      {
-        ra: planet.ra.toString(),
-        dec: planet.dec.toString(),
-        sy_dist: planet.sy_dist.toString(),
-      },
-    ],
-    ([url, request]) => fetcher(url, request)
-  );
+  // const { data, error, isLoading } = useSWR(
+  //   [
+  //     "/fetch-stars",
+  //     {
+  //       ra: planet.ra.toString(),
+  //       dec: planet.dec.toString(),
+  //       sy_dist: planet.sy_dist.toString(),
+  //     },
+  //   ],
+  //   ([url, request]) => fetcher(url, request)
+  // );
 
   return (
     <div className="relative flex flex-col items-center w-screen h-screen">
