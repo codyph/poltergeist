@@ -8,6 +8,7 @@ import SelectPlanet from "./components/SelectPlanet";
 import ButtonOverlay from "./components/ButtonOverlay";
 import { Exoplanet } from "./fetch-exoplanets/route";
 import useSWR from "swr";
+import Help from "./components/Help";
 
 export type GaiaDataRequest = {
   ra: string;
@@ -19,6 +20,7 @@ export default function Home() {
   const [displayStartOverlay, setDisplayStartOverlay] = useState<boolean>(true);
   const [displaySelectPlanet, setDisplaySelectPlanet] =
     useState<boolean>(false);
+  const [displayHelp, setDisplayHelp] = useState<boolean>(false);
   const [showConstellations, setShowConstellations] = useState<boolean>(false);
   const [planet, setPlanet] = useState<Exoplanet>({
     pl_name: "Earth",
@@ -34,7 +36,7 @@ export default function Home() {
     ra: 0,
     dec: 0,
     sy_dist: 0,
-    habitable: true
+    habitable: true,
   });
 
   const fetcher = async (url: string, args: GaiaDataRequest) => {
@@ -107,6 +109,8 @@ export default function Home() {
               setDisplaySelectPlanet={setDisplaySelectPlanet}
               showConstellations={showConstellations}
               setShowConstellations={setShowConstellations}
+              showHelp={displayHelp}
+              setShowHelp={setDisplayHelp}
             />
           </motion.div>
         ) : null}
@@ -134,6 +138,31 @@ export default function Home() {
               setDisplay={setDisplaySelectPlanet}
               planet={planet}
               setPlanet={setPlanet}
+            />
+          </motion.div>
+        ) : null}
+      </AnimatePresence>
+      <AnimatePresence>
+        {displayHelp ? (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{
+              opacity: 1,
+              transition: {
+                duration: 0.5,
+              },
+            }}
+            exit={{
+              opacity: 0,
+              transition: {
+                duration: 0.5,
+              },
+            }}
+            className="absolute z-10"
+          >
+            <Help
+              display={displayHelp}
+              setDisplay={setDisplayHelp}
             />
           </motion.div>
         ) : null}

@@ -3,6 +3,7 @@ import { IoPlanet } from "react-icons/io5";
 import { BsStars } from "react-icons/bs";
 import PlanetCard from "./PlanetCard";
 import { Exoplanet } from "../fetch-exoplanets/route";
+import { IoHelp } from "react-icons/io5";
 
 export default function ButtonOverlay({
   currentPlanet,
@@ -10,12 +11,16 @@ export default function ButtonOverlay({
   setDisplaySelectPlanet,
   showConstellations,
   setShowConstellations,
+  showHelp,
+  setShowHelp,
 }: {
   currentPlanet: Exoplanet;
   displaySelectPlanet: boolean;
   setDisplaySelectPlanet: (d: boolean) => void;
   showConstellations: boolean;
   setShowConstellations: (d: boolean) => void;
+  showHelp: boolean;
+  setShowHelp: (d: boolean) => void;
 }) {
   return (
     <div className="bg-transparent h-[100dvh] pl-8 pt-8 pb-16 text-center flex flex-col items-start justify-between">
@@ -45,6 +50,19 @@ export default function ButtonOverlay({
             }
           >
             <BsStars size={20} />
+          </Button>
+        </div>
+        <div className="text-sm flex">
+          <Button
+            onClick={() => setShowHelp(!showHelp)}
+            hoverChildren={
+              <span className="flex whitespace-nowrap">
+                <IoHelp size={20} />
+                {"\u00a0"}Help
+              </span>
+            }
+          >
+            <IoHelp size={20} />
           </Button>
         </div>
       </div>
