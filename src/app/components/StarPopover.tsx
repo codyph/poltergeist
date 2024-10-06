@@ -8,7 +8,7 @@ interface Position {
   interface Star {
     name: string;
     type: string;
-    brightness: string;
+    radius: string;
     distance: string;
     luminosity: string;
     position: Position;
@@ -77,10 +77,9 @@ export default function StarPopover({ star, onClose }: StarPopoverProps) {
       >
         <h3>{star.name}</h3>
         <p><strong>Type:</strong> {star.type}-type</p>
-        <p><strong>Brightness:</strong> {star.brightness}</p>
+        <p><strong>Radius:</strong> {star.radius}</p>
+        <p><strong>Luminosity:</strong> {star.luminosity} Sols</p>
         <p><strong>Distance:</strong> {star.distance} light-years</p>
-        <p><strong>Luminosity:</strong> {star.luminosity} L☉</p>
-        <p><strong>Position:</strong> ({star.position.x.toFixed(2)}, {star.position.y.toFixed(2)}, {star.position.z.toFixed(2)})</p>
         <button
           onClick={onClose}
           style={{

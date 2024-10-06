@@ -9,7 +9,7 @@ interface Star {
     index: number;
     name: string;
     type: string;
-    brightness: string;
+    radius: string;
     distance: string;
     luminosity: string;
     position: Position;
@@ -23,15 +23,17 @@ export const generateStarsData = (numStars: number): { starVertices: Float32Arra
         const x = (Math.random() - 0.5) * 2000;
         const y = (Math.random() - 0.5) * 2000;
         const z = (Math.random() - 0.5) * 2000;
+
+        const distance = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2))
         starVertices.push(x, y, z);
 
         starsData.push({
             index: i,
             name: `Star-${i}`,
             type: getRandomStarType(),
-            brightness: (Math.random() * 10).toFixed(2),
-            distance: (Math.random() * 1000).toFixed(2),
-            luminosity: (Math.random() * 100).toFixed(2),
+            radius: (Math.random() * 400).toFixed(2),
+            luminosity: (Math.random() * 10).toFixed(2),
+            distance: distance.toFixed(2),
             position: { x, y, z },
         });
     }
