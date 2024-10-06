@@ -1,4 +1,5 @@
 import json
+import random
 
 with open('C:\\Users\\Justin\\Documents\\NASA Space Apps\\poltergeist\\public\\exoplanets.json', 'r') as f:
     data = json.load(f)
@@ -10,6 +11,7 @@ for i, d in enumerate(data):
     pl_name = d["pl_name"]
 
     if pl_name not in addedNames:
+        d["habitable"] = random.random() < 0.2
         filteredData.append(d)
         addedNames.append(pl_name)
 
