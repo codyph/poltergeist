@@ -1,5 +1,20 @@
 [
     {
+        "pl_name": "Earth",
+        "hostname": "Sol",
+        "sy_snum": 1,
+        "sy_pnum": 8,
+        "sy_mnum": 1,
+        "pl_orbper": "365.2425",
+        "pl_rade": 1,
+        "pl_bmasse": 1,
+        "pl_eqt": 255,
+        "st_teff": 5780,
+        "ra": 0,
+        "dec": 0,
+        "sy_dist": 0
+    },
+    {
         "pl_name": "55 Cnc e",
         "hostname": "55 Cnc",
         "sy_snum": 2,
