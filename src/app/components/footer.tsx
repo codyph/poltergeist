@@ -8,8 +8,11 @@ export function SiteFooter() {
           </div>
         </div>
         <div className="flex flex-col items-end text-foreground whitespace-nowrap">
-          <a href="mailto:theatlasproject@gmail.com">
-            theatlasproject@gmail.com
+          <a href="mailto:theatlasproject.dev@gmail.com" className="hidden sm:flex">
+            theatlasproject.dev@gmail.com
+          </a>
+          <a href="mailto:theatlasproject.dev@gmail.com" className="flex sm:hidden">
+            Email us
           </a>
         </div>
       </div>
