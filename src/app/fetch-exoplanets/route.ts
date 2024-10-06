@@ -35,6 +35,7 @@ export type Exoplanet = {
   sy_dist: number;
   sy_disterr1?: number;
   sy_disterr2?: number;
+  habitable: boolean;
 };
 
 export async function GET(request: NextRequest) {
@@ -60,15 +61,15 @@ export async function GET(request: NextRequest) {
     // Example: results = results.filter(item => item.category === filter);
   }
 
-  const maxNum = data.length
+  const maxNum = data.length;
 
-  let hasMore = true
+  let hasMore = true;
 
-  let end = parseInt(start || "0") + parseInt(num || "20")
+  let end = parseInt(start || "0") + parseInt(num || "20");
 
   if (end > maxNum) {
-    end = maxNum
-    hasMore = false
+    end = maxNum;
+    hasMore = false;
   }
 
   data = data.slice(parseInt(start || "0"), end);
