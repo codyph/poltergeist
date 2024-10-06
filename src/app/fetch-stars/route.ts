@@ -21,7 +21,7 @@ export async function GET(request: NextRequest) {
   const exoplanet_dist = searchParams.get("exoplanet_dist");
 
   // Getting cone search angle
-  const searchBoundary = 30; // parsecs
+  const searchBoundary = 10; // parsecs
 
   let query = ``;
   if (exoplanet_dist && parseFloat(exoplanet_dist) > 0.5) {
