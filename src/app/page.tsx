@@ -10,9 +10,9 @@ import { Exoplanet } from "./fetch-exoplanets/route";
 import useSWR from "swr";
 
 export type GaiaDataRequest = {
-  ra: string,
-  dec: string,
-  sy_dist: string,
+  ra: string;
+  dec: string;
+  sy_dist: string;
 };
 
 export default function Home() {
@@ -34,6 +34,7 @@ export default function Home() {
     ra: 0,
     dec: 0,
     sy_dist: 0,
+    habitable: true
   });
 
   const fetcher = async (url: string, args: GaiaDataRequest) => {
@@ -44,15 +45,18 @@ export default function Home() {
   };
 
   const { data, error, isLoading } = useSWR(
-    ["/fetch-stars", {
-      ra: planet.ra.toString(),
-      dec: planet.dec.toString(),
-      sy_dist: planet.sy_dist.toString(),
-    }],
+    [
+      "/fetch-stars",
+      {
+        ra: planet.ra.toString(),
+        dec: planet.dec.toString(),
+        sy_dist: planet.sy_dist.toString(),
+      },
+    ],
     ([url, request]) => fetcher(url, request)
   );
 
-  console.log(data)
+  console.log(data);
 
   return (
     <div className="relative flex flex-col items-center w-screen h-screen">
@@ -97,9 +101,10 @@ export default function Home() {
                 duration: 0.5,
               },
             }}
-            className="absolute z-10 self-start ml-8 mt-8"
+            className="absolute z-10 self-start"
           >
             <ButtonOverlay
+              currentPlanet={planet}
               displaySelectPlanet={displaySelectPlanet}
               setDisplaySelectPlanet={setDisplaySelectPlanet}
               showConstellations={showConstellations}
