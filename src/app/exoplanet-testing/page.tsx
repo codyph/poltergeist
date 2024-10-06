@@ -1,6 +1,7 @@
 "use client";
 
 import useSWR from "swr";
+import React from "react";
 import { Exoplanet } from "../fetch-exoplanets/route";
 
 export type ExoplanetDataRequest = {

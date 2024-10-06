@@ -1,22 +1,53 @@
 import { type NextRequest } from "next/server";
 
+export type Stars = {
+  s_id: string;
+  ra: number;
+  dec: number;
+  parallax: number;
+}
+
 export async function GET(request: NextRequest) {
   const baseUrl = `https://gea.esac.esa.int/tap-server/tap/sync?`;
 
   const searchParams = request.nextUrl.searchParams
-  const num = searchParams.get('num')
+  const exoplanet_ra = searchParams.get('exoplanet_ra')
+  const exoplanet_dec = searchParams.get('exoplanet_dec')
+  const exoplanet_dist = searchParams.get('exoplanet_dist')
 
-  const potentialQuery = `
-  SELECT ra, dec, parallax
-    FROM gaiadr3.gaia_source
+  // Getting cone search angle
+  const searchBoundary = 30 // parsecs
+
+  let query = ``
+  if (exoplanet_dist && parseFloat(exoplanet_dist) > 0.5) {
+    const upperBoundary = parseFloat(exoplanet_dist) + searchBoundary;
+    let lowerBoundary = parseFloat(exoplanet_dist) - searchBoundary;
+    lowerBoundary < 0 && (lowerBoundary = 0);
+
+    const searchAngle = Math.atan(searchBoundary/parseFloat(exoplanet_dist)) * 180/Math.PI
+    query = `
+    SELECT gs.ra, gs.dec, ap.distance_gspphot,  ap.spectraltype_esphs, ap.radius_flame, ap.lum_flame, ap.age_flame, ap.teff_gspphot, ap.logg_gspphot
+    FROM gaiadr3.gaia_source AS gs
+    JOIN gaiadr3.astrophysical_parameters as ap
+    ON gs.source_id = ap.source_id
     WHERE 1=CONTAINS(
-      POINT('ICRS', gaiadr3.gaia_source.ra, gaiadr3.gaia_source.dec),
-      CIRCLE('ICRS', 299.2685, 43.8542, 0.5)
+      POINT('ICRS', gs.ra, gs.dec),
+      CIRCLE('ICRS', ${exoplanet_ra}, ${exoplanet_dec}, ${searchAngle})
     )
-	AND parallax > 0
-	AND ABS(1000/parallax) < 2000
-	AND ABS(1000/parallax) > 1000
-  `
+    AND ap.distance_gspphot <= ${upperBoundary}
+    AND ap.distance_gspphot >= ${lowerBoundary}
+    `
+  } else {
+    query = `
+    SELECT gs.ra, gs.dec, ap.distance_gspphot,  ap.spectraltype_esphs, ap.radius_flame, ap.lum_flame, ap.age_flame, ap.teff_gspphot, ap.logg_gspphot
+    FROM gaiadr3.gaia_source AS gs
+    JOIN gaiadr3.astrophysical_parameters AS ap
+    ON gs.source_id = ap.source_id
+    WHERE ap.distance_gspphot <= ${searchBoundary}
+    `
+  }
+
+  console.log(query)
 
   const url =
     baseUrl +
@@ -25,7 +56,7 @@ export async function GET(request: NextRequest) {
       LANG: "ADQL",
       FORMAT: "json",
       // PHASE: "RUN",
-      QUERY: `SELECT TOP ${num} source_id,ra,dec FROM gaiadr1.gaia_source`,
+      QUERY: `${query}`,
     });
 
   const res = await fetch(url);

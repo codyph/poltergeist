@@ -1,12 +1,15 @@
 "use client";
 
 import useSWR from "swr";
+import React from "react";
 
 export type GaiaDataRequest = {
-  num: string;
+  pl_ra: string,
+  pl_dec: string,
+  pl_dist: string,
 };
 
-export default function GaiaDataFetcher() {
+export default function GaiaDataFetcher(pl_ra: number, pl_dec: number, pl_dist: number) {
   const fetcher = async (url: string, args: GaiaDataRequest) => {
     const params = new URLSearchParams(args);
     return fetch(`${url}?${params}`)
@@ -15,7 +18,9 @@ export default function GaiaDataFetcher() {
   };
 
   const requestArgs = {
-    num: "5"
+    pl_ra: "351.7717763", // deg
+    pl_dec: "-1.2853435", // deg
+    pl_dist: "29.661", // pc
   }
 
   const { data, error, isLoading } = useSWR(
@@ -23,12 +28,14 @@ export default function GaiaDataFetcher() {
     ([url, request]) => fetcher(url, request)
   );
 
+  // return data
+
   return (
     <div>
       {error ? (
         `Error: ${error}`
       ) : isLoading ? (
-        `Fetching ${requestArgs.num} stars...`
+        `Fetching stars...`
       ) : (
         <>
           <h1>Gaia DR3 Data</h1>
