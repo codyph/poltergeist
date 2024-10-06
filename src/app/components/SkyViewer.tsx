@@ -37,7 +37,7 @@ const createLights = (scene: THREE.Scene) => {
 };
 
 const createGround = (scene: THREE.Scene, textureLoader: THREE.TextureLoader, renderer: THREE.WebGLRenderer) => {
-  const groundTexture = textureLoader.load("/textures/earth42.jpg", (texture) => {
+  const groundTexture = textureLoader.load("/textures/planets/venus.jpg", (texture) => {
     const maxAnisotropy = renderer.capabilities.getMaxAnisotropy();
     texture.anisotropy = maxAnisotropy;
 
@@ -49,7 +49,7 @@ const createGround = (scene: THREE.Scene, textureLoader: THREE.TextureLoader, re
   });
   groundTexture.rotation = Math.PI / 40;
 
-  const bumpMap = textureLoader.load("/textures/bump.jpg");
+  const bumpMap = textureLoader.load("/textures/bumpMaps/bump2.jpg");
 
   const groundGeometry = new THREE.SphereGeometry(10, 400, 400);
   const groundMaterial = new THREE.MeshStandardMaterial({
