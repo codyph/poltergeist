@@ -140,20 +140,6 @@ export default function SelectPlanet({
         <div className="flex items-center justify-between mt-4 w-full text-sm">
           <Button onClick={() => setDisplay(false)}>Cancel</Button>
           <div className="flex items-center gap-4">
-            <Button
-              onClick={() => {
-                setPlanet(
-                  resultList[Math.floor(Math.random() * resultList.length)]
-                );
-                setDisplay(false);
-                return;
-              }}
-            >
-              <span className="flex whitespace-nowrap">
-                Random{"\u00a0"}
-                <FaShuffle size={20} />
-              </span>
-            </Button>
             {selectedPlanet && !(selectedPlanet.pl_name == planet.pl_name) ? (
               <Button
                 onClick={() => {
@@ -167,6 +153,20 @@ export default function SelectPlanet({
                 Go
               </Button>
             ) : null}
+            <Button
+              onClick={() => {
+                setPlanet(
+                  resultList[Math.floor(Math.random() * resultList.length)]
+                );
+                setDisplay(false);
+                return;
+              }}
+            >
+              <span className="flex whitespace-nowrap">
+                Surprise me{"\u00a0"}
+                <FaShuffle size={20} />
+              </span>
+            </Button>
           </div>
         </div>
       </div>
