@@ -66,12 +66,12 @@ export default function StarPopover({ star, onClose }: StarPopoverProps) {
           position: 'fixed',
           top: popoverPosition.top,
           left: popoverPosition.left,
-          backgroundColor: 'rgba(0, 0, 0, 0.8)',
+          backgroundColor: 'rgba(20, 20, 20, 0.8)',
           color: '#fff',
           padding: '15px',
           borderRadius: '8px',
           zIndex: 1000,
-          maxWidth: '300px',
+          maxWidth: '350px',
           boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
         }}
       >
@@ -84,7 +84,7 @@ export default function StarPopover({ star, onClose }: StarPopoverProps) {
           onClick={onClose}
           style={{
             marginTop: '10px',
-            padding: '5px 10px',
+            padding: '10px 10px',
             backgroundColor: '#ff5e5e',
             border: 'none',
             borderRadius: '4px',

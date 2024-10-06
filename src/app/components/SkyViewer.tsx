@@ -5,6 +5,7 @@ import * as THREE from "three";
 import StarPopover from "./StarPopover";
 import { toScreenPosition } from "../utils/screenPosition";
 import { generateStarsData } from "../utils/starData";
+import { Exoplanet } from "../fetch-exoplanets/route";
 // Scene Setup Helper Functions
 
 const createScene = () => new THREE.Scene();
@@ -36,20 +37,52 @@ const createLights = (scene: THREE.Scene) => {
   scene.add(directionalLight);
 };
 
-const createGround = (scene: THREE.Scene, textureLoader: THREE.TextureLoader, renderer: THREE.WebGLRenderer) => {
-  const groundTexture = textureLoader.load("/textures/planets/venus.jpg", (texture) => {
-    const maxAnisotropy = renderer.capabilities.getMaxAnisotropy();
-    texture.anisotropy = maxAnisotropy;
+const createGround = (
+  scene: THREE.Scene,
+  planetName: string,
+  textureLoader: THREE.TextureLoader,
+  renderer: THREE.WebGLRenderer
+) => {
 
-    texture.magFilter = THREE.LinearFilter;
-    texture.minFilter = THREE.LinearMipMapLinearFilter;
+  const planetTextures = [
+    "/textures/planets/mars.jpg",
+    "/textures/planets/jupiter.jpg",
+    "/textures/planets/mercury.jpg",
+    "/textures/planets/neptune.jpg",
+    "/textures/planets/venus.jpg",
+  ]
 
-    texture.wrapT = THREE.ClampToEdgeWrapping;
-    texture.wrapS = THREE.ClampToEdgeWrapping;
-  });
-  groundTexture.rotation = Math.PI / 40;
+  const bumpMaps = [
+    "/textures/bumpMaps/bump1.jpg",
+    "/textures/bumpMaps/bump2.jpg",
+    "/textures/bumpMaps/bump3.jpg",
+  ];
 
-  const bumpMap = textureLoader.load("/textures/bumpMaps/bump2.jpg");
+  let randomTexture = planetTextures[Math.floor(Math.random() * planetTextures.length)];
+  let randomBumpMap = bumpMaps[Math.floor(Math.random() * bumpMaps.length)];
+  let randomAngle = Math.random() * 2;
+  if (planetName == "Earth") {
+    randomTexture = "/textures/planets/earth.jpg";
+    randomAngle = 1.0/40.0
+  }
+
+
+  const groundTexture = textureLoader.load(
+    randomTexture,
+    (texture) => {
+      const maxAnisotropy = renderer.capabilities.getMaxAnisotropy();
+      texture.anisotropy = maxAnisotropy;
+
+      texture.magFilter = THREE.LinearFilter;
+      texture.minFilter = THREE.LinearMipMapLinearFilter;
+
+      texture.wrapT = THREE.ClampToEdgeWrapping;
+      texture.wrapS = THREE.ClampToEdgeWrapping;
+    }
+  );
+  groundTexture.rotation = Math.PI * randomAngle;
+
+  const bumpMap = textureLoader.load(randomBumpMap);
 
   const groundGeometry = new THREE.SphereGeometry(10, 400, 400);
   const groundMaterial = new THREE.MeshStandardMaterial({
@@ -96,7 +129,7 @@ const createHoverSphere = (scene: THREE.Scene) => {
 
 // Main Component
 
-export default function SkyViewer() {
+export default function SkyViewer({planet}: {planet: Exoplanet}) {
   const mountRef = useRef<HTMLDivElement>(null);
   const [selectedStar, setSelectedStar] = useState(null);
   const [hoveredStar, setHoveredStar] = useState(null);
@@ -115,6 +148,7 @@ export default function SkyViewer() {
     const textureLoader = new THREE.TextureLoader();
     const { groundGeometry, groundMaterial } = createGround(
       scene,
+      planet.pl_name,
       textureLoader,
       renderer
     );
@@ -242,7 +276,7 @@ export default function SkyViewer() {
       hoverMaterial.dispose();
       renderer.dispose();
     };
-  }, []);
+  }, [planet]);
 
   const closeDialog = () => setSelectedStar(null);
 
@@ -258,7 +292,9 @@ export default function SkyViewer() {
           position: "relative",
         }}
       />
-      {selectedStar && <StarPopover star={selectedStar} onClose={closeDialog} />}
+      {selectedStar && (
+        <StarPopover star={selectedStar} onClose={closeDialog} />
+      )}
     </>
   );
 }
