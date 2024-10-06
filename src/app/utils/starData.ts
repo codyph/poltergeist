@@ -5,7 +5,7 @@ interface Position {
     z: number;
 }
 
-interface Star {
+export interface Star {
     index: number;
     name: string;
     type: string;
