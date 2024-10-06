@@ -4,7 +4,7 @@ import React, { useRef, useState, useEffect, MutableRefObject } from "react";
 import * as THREE from "three";
 import StarPopover from "./StarPopover";
 import { toScreenPosition } from "../utils/screenPosition";
-import { generateStarsData } from "../utils/starData";
+import { generateStarsData, Star } from "../utils/starData";
 import { Exoplanet } from "../fetch-exoplanets/route";
 // Scene Setup Helper Functions
 
@@ -115,7 +115,7 @@ const createStars = (scene: THREE.Scene, starVertices: Float32Array) => {
 
 const createConstellationLines = (
   scene: THREE.Scene,
-  starsData: any[],
+  starsData: Star[],
   constellations: number[][]
 ): THREE.Line[] => { // Return an array of lines
   const material = new THREE.LineBasicMaterial({ color: 0xffd700 }); // Gold color for lines
@@ -166,7 +166,7 @@ export default function SkyViewer({ planet, showConstellations }: { planet: Exop
   const sceneRef = useRef<THREE.Scene>();
   const cameraRef = useRef<THREE.PerspectiveCamera>();
   const rendererRef = useRef<THREE.WebGLRenderer>();
-  const starsDataRef = useRef<any[]>([]);
+  const starsDataRef = useRef<Star[]>([]);
   const starsRef = useRef<THREE.Points>();
 
   useEffect(() => {
